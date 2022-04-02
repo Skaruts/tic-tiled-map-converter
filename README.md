@@ -1,25 +1,29 @@
 # TicTiled map converter
 
-A simple python script for converting maps between Tiled and TIC-80.
+A simple python script for converting maps between Tiled and TIC-80. Requires [xmltodict](https://github.com/martinblech/xmltodict).
+
+### Usage
+
+To convert from TIC-80 to Tiled
+
+```
+tictiled source_file.map dest_file.tmx
+```
+
+To convert from Tiled to TIC-80
 
 ```
 tictiled source_file.tmx dest_file.map
 ```
-There are some limitations (for now):
+### Notes
 
-- it only supports conversion from `.tmx` to `.map`
-- it only supports `CSV` Tile Layer Format (you can set it in the map properties in Tiled)
+The `Tile Layer Format` must be set to `CSV` (you can set it in the map properties). 
 
+Empty tiles will be converted to `0`.
 
-Empty tiles are set to `0` when converting from `.tmx` to `.map`.
+Tile Layers can be used, and will be merged down when converting. TicTiled ignores all other layer types and groups.
 
-You can use layers in Tiled. The script will merge down all layers when converting from `.tmx` to `.map`.
-
-If you need a layer to be ignored by Tictiled, you can do it in two ways:
- - add a custom property (string or int) to the layer: `tt_ignore = 1` 
- - put the layer in a group (all groups are ignored by Tictiled)
-
-
+If you need a layer to be ignored by TicTiled, you can do it either by adding the layer to a group, or by adding a custom property (string or int) to the layer: `tt_ignore = 1`.
 
 
 
