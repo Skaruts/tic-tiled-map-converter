@@ -22,6 +22,7 @@ def __ERROR(msg):
 IGNORE_SYMBOL = "tt_ignore"
 IGNORE_VALUE = 1
 
+
 def check_ignored_flag(layer):
 	if not "properties" in layer: return False
 	props = layer["properties"]["property"]
@@ -44,7 +45,6 @@ def tmx_to_map(src_fname, dest_fname):
 		xml = xmltodict.parse(f.read())
 		# print(json.dumps(xml, indent=4))
 
-		# print( isinstance(xml["map"]["layer"], list) )
 		if not isinstance(xml["map"]["layer"], list):
 			layers.append(xml["map"]["layer"])
 		else:
@@ -54,14 +54,12 @@ def tmx_to_map(src_fname, dest_fname):
 		# collect tile data from layers
 		layer_data = []
 		for l in layers:
-			ignored = check_ignored_flag(l)
-			if not ignored:
-				data = l["data"]
-				encoding = data["@encoding"]
-				if encoding != "csv":
-					__ERROR(f"invalid Tile Layer Format: '{encoding}' (only 'CSV' is supported for now) \n")
-				# print("ignored: ", ignored)
-				layer_data.append(data["#text"].replace('\n', '').split(','))
+			if check_ignored_flag(l): continue
+			data = l["data"]
+			encoding = data["@encoding"]
+			if encoding != "csv":
+				__ERROR(f"invalid Tile Layer Format: '{encoding}' (only 'CSV' is supported for now) \n")
+			layer_data.append(data["#text"].replace('\n', '').split(','))
 
 		# merge down layers
 		for ld in layer_data:
@@ -114,8 +112,6 @@ def ask_user(msg):
 
 
 def main(argc, argv):
-	# print("argv[0]: ", argv[0])
-
 	if argc == 1:
 		__ERROR("invalid file names\n\n    Usage: tictiled <source_file[.map|.tmx]> <dest_file[.tmx|.map]>\n")
 
@@ -129,10 +125,9 @@ def main(argc, argv):
 	if not file_exists(src_fname):
 		__ERROR(f"couldn't load file '{src_fname}'. \n")
 
-	if file_exists(dest_fname):
-		# TODO: bother asking about overwriting? (add '-y' parameter for skipping it)
-		if not ask_user(f"file {dest_fname} exists: you want to overwrite it? "):
-			return
+	if file_exists(dest_fname)\
+	and not ask_user(f"file {dest_fname} exists: you want to overwrite it? "):
+		return
 
 	src_ext  = os.path.splitext(src_fname)[1]
 	dest_ext = os.path.splitext(dest_fname)[1]
