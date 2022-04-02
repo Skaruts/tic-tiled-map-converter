@@ -17,7 +17,7 @@ You can use layers in Tiled. The script will merge down all layers when converti
 
 If you need a layer to be ignored by Tictiled, you can do it in two ways:
  - add a custom property (string or int) to the layer: `tt_ignore = 1` 
- - put the layer in a group (groups are ignored by Tictiled)
+ - put the layer in a group (all groups are ignored by Tictiled)
 
 
 
