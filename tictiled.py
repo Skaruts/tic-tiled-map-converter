@@ -6,7 +6,7 @@ import xmltodict
 # TODO:
 #   optionally care about layer visibility in order to ignore layers
 #   account for when no tileset file exists yet
-#   consider asking about overwriting 'dest_file'?
+
 
 #=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=
 #       OS / helper stuff
@@ -37,7 +37,6 @@ def check_ignored_flag(layer):
 
 
 def tmx_to_map(src_fname, dest_fname):
-	print(f"converting from '{src_fname}' to '{dest_fname}'...")
 	map_data = [0 for i in range(240*136)]
 
 	with open(src_fname, 'r') as f:
@@ -72,11 +71,10 @@ def tmx_to_map(src_fname, dest_fname):
 		for n in map_data:
 			file.write(n.to_bytes(1, byteorder='big', signed=False))
 
-	print(f"\n'{dest_fname}' done.")
+
 
 
 def map_to_tmx(src_fname, dest_fname):
-	print(f"converting from '{src_fname}' to '{dest_fname}'...")
 	map_data = []
 	with open(src_fname, 'rb') as f:
 		map_str = f.read()
@@ -99,17 +97,6 @@ def map_to_tmx(src_fname, dest_fname):
 	with open(dest_fname, 'w') as file:
 		file.write(xml)
 
-	print(f"\n'{dest_fname}' done.")
-
-
-def ask_user(msg):
-	while True:
-		inpt = input(msg)
-		if inpt in ['y', 'Y', 'yes', 'yup', 'yoh', 'yeah', 'yea', 'da', 'ya', 'si', 'sim', 'hai', 'yeah yeah yeah', 'sure', 'of course']:
-			return True
-		if inpt in ['n', 'N', 'no', 'nope', 'nah', 'nop', 'newp', 'NO', 'niet', 'nein', 'não', 'nao', 'bo', 'wait no!', 'fu', 'under my dead body!', ]:
-			return False
-
 
 def main(argc, argv):
 	if argc == 1:
@@ -125,19 +112,15 @@ def main(argc, argv):
 	if not file_exists(src_fname):
 		__ERROR(f"couldn't load file '{src_fname}'. \n")
 
-	if file_exists(dest_fname)\
-	and not ask_user(f"file {dest_fname} exists: you want to overwrite it? "):
-		return
-
 	src_ext  = os.path.splitext(src_fname)[1]
 	dest_ext = os.path.splitext(dest_fname)[1]
 
-	if src_ext == ".tmx":
-		tmx_to_map(src_fname, dest_fname)
-	elif src_ext == ".map":
-		map_to_tmx(src_fname, dest_fname)
+	print(f"converting from '{src_fname}' to '{dest_fname}'...")
 
+	if   src_ext == ".tmx": tmx_to_map(src_fname, dest_fname)
+	elif src_ext == ".map": map_to_tmx(src_fname, dest_fname)
 
+	print(f"\n'{dest_fname}' done.")
 
 
 #=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=
