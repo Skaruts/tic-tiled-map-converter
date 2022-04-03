@@ -9,12 +9,14 @@ Depends on [xmltodict](https://github.com/martinblech/xmltodict).
 Call the script with the file names in the appropriate order, to convert from TIC-80 to Tiled or from Tiled to TIC-80. 
 
 ```
-tictiled source_file.map dest_file.tmx
+tictiled foo.map derp.tmx
 
-or 
-
-tictiled source_file.tmx dest_file.map
+tictiled derp.tmx foo.map
 ```
+
+The output file name is optional. If one isn't given, then TicTiled will use the name of the source file. 
+You can also omit the file extension for the output file. 
+
 
 ### Notes
 
