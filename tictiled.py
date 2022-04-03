@@ -89,7 +89,7 @@ def map_to_tmx(src_fname, dest_fname):
 	xml = ""\
 		+'<?xml version="1.0" encoding="UTF-8"?>\n'\
 		+'<map version="1.8" tiledversion="1.8.4" orientation="orthogonal" renderorder="right-down" width="240" height="136" tilewidth="8" tileheight="8" infinite="0" nextlayerid="2" nextobjectid="1">\n'\
-		+' <tileset firstgid="1" source="mini_tiles.tsx"/>\n'\
+		+' <tileset firstgid="1" source="tiles.tsx"/>\n'\
 		+' <layer id="1" name="Tile Layer 1" width="240" height="136">\n'\
 		+'   <data encoding="csv">\n'\
 		+ ', '.join(map_data) + '\n'\
