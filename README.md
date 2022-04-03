@@ -14,8 +14,8 @@ tictiled foo.map derp.tmx
 tictiled derp.tmx foo.map
 ```
 
-The output file name is optional. If one isn't given, then TicTiled will use the name of the source file. 
-You can also omit the file extension for the output file. 
+The output file name and extension are optional. If a file name isn't given, then TicTiled will use the same name as the source file. 
+If the extension is omitted, it will be inferred from the source file's. 
 
 
 ### Notes
