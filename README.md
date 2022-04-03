@@ -53,13 +53,10 @@ tictiled foo.map derp.tmx -ts:my_tileset
 
 ## Notes
 
-The `Tile Layer Format` must be set to `CSV` (you can set it in the map properties). 
-
-Empty tiles are converted to `0`.
-
-You can use `Tile Layers` in your maps. They are merged down when converting to TIC-80. All other layer types and groups are ignored.
-
-If you need a layer to be ignored by TicTiled, you can do it either by adding the layer to a group, or by adding a custom property (string or int) to the layer: `tt_ignore = 1`.
+- The `Tile Layer Format` must be set to `CSV` (you can set it in the map properties). 
+- Empty tiles are converted to `0` (from `.map` to `.tmx`).
+- You can use `Tile Layers` in your maps. They are merged down when converting to TIC-80. All other layer types and groups are ignored.
+- If you need a layer to be ignored by TicTiled, you can do it either by adding the layer to a group, or by adding a custom property (string or int) to the layer: `tt_ignore = 1`.
 
 
 
