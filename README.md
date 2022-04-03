@@ -24,25 +24,27 @@ tictiled derp.tmx foo.map
 ```
 
 The output file name and extension are optional. If a file name isn't given, then TicTiled will use the same name as the source file. 
-If the extension is omitted, it will be inferred from the source file's. 
+If the extension is omitted, it will be inferred. 
 
 
 ### Tilesets
 
-When converting to `.tmx` you can also specify a tileset using the `-ts` parameter. The parameter must not contain spaces:
+When converting to `.tmx`, TicTiled will use a default tileset `tiles.tsx`. If you want to specify your own tileset, you can use the `-ts` parameter (cannot contain spaces):
 
 `-ts:<tileset_name>`
 
 Example:
+
 ```
 tictiled -ts:my_tileset.tsx foo.map derp.tmx
 ```
+
 The tileset file extension can be omitted. If the tileset doesn't exist, TicTiled will create a new one, and it will attach the tileset to a `.png` image with the same name (it won't check if the image exists). 
 
 It doesn't matter if the `-ts` parameter comes before or after the filenames. This will work too:
 
 ```
-tictiled foo.map derp.tmx -ts:my_tileset.tsx
+tictiled foo.map derp.tmx -ts:my_tileset
 ```
 
 
