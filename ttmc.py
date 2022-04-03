@@ -3,7 +3,7 @@ import os
 import xmltodict
 # import json  # for debugging
 
-VERSION = "0.02"
+VERSION = "0.02a"
 
 # TODO:
 #   optionally care about layer visibility in order to ignore layers
@@ -105,9 +105,9 @@ def map_to_tmx(src_fname, dest_fname):
 		)
 
 
-USAGE = f"Usage:\n    tictiled [-ts:<tileset[{TSX}]>] <source_file[{MAP}|{TMX}]> <dest_file[{TMX}|{MAP}]>"
+USAGE = f"Usage:\n    ttmc [-ts:<tileset[{TSX}]>] <source_file[{MAP}|{TMX}]> <dest_file[{TMX}|{MAP}]>"
 def no_args():
-	print(f"\n\tTicTiled {VERSION}\n\n{USAGE}")
+	print(f"\n\tTic-Tiled Map Converter {VERSION}\n\n{USAGE}")
 
 
 def handle_tileset(arg):
@@ -152,7 +152,7 @@ def main(argc, argv):
 		arg = argv[i]
 		if arg.startswith('-'):
 			if arg == "-v":
-				print(f"\n\tTicTiled {VERSION}\n")
+				print(f"\n\tTic-Tiled Map Converter {VERSION}\n")
 				return
 			elif arg.startswith("-ts"):
 				handle_tileset(arg)
