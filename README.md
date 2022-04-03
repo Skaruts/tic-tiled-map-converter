@@ -4,7 +4,16 @@ A simple python script for converting maps between Tiled and TIC-80.
 
 Depends on [xmltodict](https://github.com/martinblech/xmltodict#ok-how-do-i-get-it).
 
-### Usage
+Current version: `0.02`
+
+
+
+
+
+## Usage
+
+
+### Converting
 
 Call the script with the file names in the appropriate order, to convert from TIC-80 to Tiled or from Tiled to TIC-80. 
 
@@ -18,7 +27,29 @@ The output file name and extension are optional. If a file name isn't given, the
 If the extension is omitted, it will be inferred from the source file's. 
 
 
-### Notes
+### Tilesets
+
+When converting to `.tmx` you can also specify a tileset using the `-ts` parameter. The parameter must not contain spaces:
+
+`-ts:<tileset_name>`
+
+Example:
+```
+tictiled -ts:my_tileset.tsx foo.map derp.tmx
+```
+The tileset file extension can be omitted. If the tileset doesn't exist, TicTiled will create a new one, and it will attach the tileset to a `.png` image with the same name (it won't check if the image exists). 
+
+It doesn't matter if the `-ts` parameter comes before or after the filenames. This will work too:
+
+```
+tictiled foo.map derp.tmx -ts:my_tileset.tsx
+```
+
+
+
+
+
+## Notes
 
 The `Tile Layer Format` must be set to `CSV` (you can set it in the map properties). 
 
