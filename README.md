@@ -18,10 +18,11 @@ Current version: `0.02`
 Call the script with the file names in the appropriate order, to convert from TIC-80 to Tiled or from Tiled to TIC-80. 
 
 ```
-ttmc foo.map derp.tmx
+python3 ttmc foo.map derp.tmx
 
-ttmc derp.tmx foo.map
+python3 ttmc derp.tmx foo.map
 ```
+(On some systems you may be able to omit `python3` and call scripts directly, as in `ttmc derp.tmx foo.map`.)
 
 The output file name and extension are optional. If a file name isn't provided, then it will be given the same name as the source file. 
 If the extension is omitted, it will be inferred. 
@@ -36,7 +37,7 @@ When converting to `.tmx`, a default tileset `tiles.tsx` will be attached to the
 Example:
 
 ```
-ttmc -ts:my_tileset.tsx foo.map derp.tmx
+python3 ttmc -ts:my_tileset.tsx foo.map derp.tmx
 ```
 
 The tileset file extension can be omitted. 
@@ -46,7 +47,7 @@ If the tileset doesn't exist, a new one will be created, and it will be given a 
 It doesn't matter if the `-ts` parameter comes before or after the filenames. This will work too:
 
 ```
-ttmc foo.map derp.tmx -ts:my_tileset
+python3 ttmc foo.map derp.tmx -ts:my_tileset
 ```
 
 
@@ -55,9 +56,9 @@ ttmc foo.map derp.tmx -ts:my_tileset
 
 ## Notes
 
+- You can use `Tile Layers` in your maps. They are merged down when converting to TIC-80. All other layer types and groups are ignored.
 - The `Tile Layer Format` must be set to `CSV` (you can set it in the map properties). 
 - Empty tiles are converted to `0` (from `.map` to `.tmx`).
-- You can use `Tile Layers` in your maps. They are merged down when converting to TIC-80. All other layer types and groups are ignored.
 - If you need a layer to be ignored during the conversion process, you can do it either by adding the layer to a group, or by adding a custom property (string or int) to the layer: `tt_ignore = 1`.
 
 
