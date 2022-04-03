@@ -1,11 +1,12 @@
 # TicTiled map converter
 
 A simple python script for converting maps between Tiled and TIC-80. 
+
 Depends on [xmltodict](https://github.com/martinblech/xmltodict).
 
 ### Usage
 
-Specify the filenames in the appropriate order, to convert from TIC-80 to Tiled or from Tiled to TIC-80:
+Call the script with the file names in the appropriate order, to convert from TIC-80 to Tiled or from Tiled to TIC-80. 
 
 ```
 tictiled source_file.map dest_file.tmx
