@@ -19,9 +19,12 @@ def __ERROR(msg):
 	sys.exit(1)
 #=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=
 
+VERSION = 0.01
+
 IGNORE_SYMBOL = "tt_ignore"
 IGNORE_VALUE = 1
-
+TMX = ".tmx"
+MAP = ".map"
 
 def check_ignored_flag(layer):
 	if not "properties" in layer: return False
@@ -86,7 +89,7 @@ def map_to_tmx(src_fname, dest_fname):
 	xml = ""\
 		+'<?xml version="1.0" encoding="UTF-8"?>\n'\
 		+'<map version="1.8" tiledversion="1.8.4" orientation="orthogonal" renderorder="right-down" width="240" height="136" tilewidth="8" tileheight="8" infinite="0" nextlayerid="2" nextobjectid="1">\n'\
-		+' <tileset firstgid="1" source="tiles.tsx"/>\n'\
+		+' <tileset firstgid="1" source="mini_tiles.tsx"/>\n'\
 		+' <layer id="1" name="Tile Layer 1" width="240" height="136">\n'\
 		+'   <data encoding="csv">\n'\
 		+ ', '.join(map_data) + '\n'\
@@ -98,27 +101,56 @@ def map_to_tmx(src_fname, dest_fname):
 		file.write(xml)
 
 
+def no_args():
+	print(f"\n\tTicTiled {VERSION}\n\nUsage:\n    tictiled <source_file[{MAP}|{TMX}]> <dest_file[{TMX}|{MAP}]>")
+
+
+
 def main(argc, argv):
 	if argc == 1:
-		__ERROR("invalid file names\n\n    Usage: tictiled <source_file[.map|.tmx]> <dest_file[.tmx|.map]>\n")
+		no_args()
+		return
 
-	src_fname = argv[1]
-	dest_fname = argv[2]
+	src_fname  = None # argv[1]
+	dest_fname = None # argv[2]
 
-	if not (   (src_fname.endswith(".map") and dest_fname.endswith(".tmx"))\
-	        or (src_fname.endswith(".tmx") and dest_fname.endswith(".map"))  ):
+	for i in range(1, argc):
+		a = argv[i]
+		if a.startswith('-'):
+			if a == "-v":
+				print(f"\n\tTicTiled {VERSION}\n")
+				return
+		else:
+			if   not src_fname: src_fname = a
+			elif not dest_fname: dest_fname = a
+
+	# print(src_fname, dest_fname)
+
+	(sname, sext) = os.path.splitext(src_fname)
+	if not dest_fname: dest_fname = sname
+
+	# print(sname, sext)
+	(dname, dext) = os.path.splitext(dest_fname)
+	if not dext:
+		if sext == TMX:
+			dest_fname += MAP
+			dext = MAP
+		elif sext == MAP:
+			dest_fname += TMX
+			dext = TMX
+
+	# print(src_fname, dest_fname)
+
+	if not ((sext == MAP and dext == TMX) or (sext == TMX and dext == MAP)):
 		__ERROR("invalid file extensions \n")
 
 	if not file_exists(src_fname):
 		__ERROR(f"couldn't load file '{src_fname}'. \n")
 
-	src_ext  = os.path.splitext(src_fname)[1]
-	dest_ext = os.path.splitext(dest_fname)[1]
-
 	print(f"converting from '{src_fname}' to '{dest_fname}'...")
 
-	if   src_ext == ".tmx": tmx_to_map(src_fname, dest_fname)
-	elif src_ext == ".map": map_to_tmx(src_fname, dest_fname)
+	if   sext == TMX: tmx_to_map(src_fname, dest_fname)
+	elif sext == MAP: map_to_tmx(src_fname, dest_fname)
 
 	print(f"\n'{dest_fname}' done.")
 
