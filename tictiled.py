@@ -3,6 +3,8 @@ import os
 import xmltodict
 # import json  # for debugging
 
+VERSION = "0.02"
+
 # TODO:
 #   optionally care about layer visibility in order to ignore layers
 #   account for when no tileset file exists yet
@@ -17,14 +19,19 @@ def path_exists(path): return os.path.exists(path)
 def __ERROR(msg):
 	print(f'error: {msg}')
 	sys.exit(1)
+def check_file(filename):
+	if not file_exists(filename):
+		__ERROR(f"couldn't find file '{filename}'. \n")
 #=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=
-
-VERSION = 0.01
 
 IGNORE_SYMBOL = "tt_ignore"
 IGNORE_VALUE = 1
 TMX = ".tmx"
 MAP = ".map"
+TSX = ".tsx"
+TILESET="tiles.tsx"
+
+
 
 def check_ignored_flag(layer):
 	if not "properties" in layer: return False
@@ -75,8 +82,6 @@ def tmx_to_map(src_fname, dest_fname):
 			file.write(n.to_bytes(1, byteorder='big', signed=False))
 
 
-
-
 def map_to_tmx(src_fname, dest_fname):
 	map_data = []
 	with open(src_fname, 'rb') as f:
@@ -86,73 +91,94 @@ def map_to_tmx(src_fname, dest_fname):
 	for i in range(len(map_data)):
 		map_data[i] = str(map_data[i]+1)
 
-	xml = ""\
-		+'<?xml version="1.0" encoding="UTF-8"?>\n'\
-		+'<map version="1.8" tiledversion="1.8.4" orientation="orthogonal" renderorder="right-down" width="240" height="136" tilewidth="8" tileheight="8" infinite="0" nextlayerid="2" nextobjectid="1">\n'\
-		+' <tileset firstgid="1" source="tiles.tsx"/>\n'\
-		+' <layer id="1" name="Tile Layer 1" width="240" height="136">\n'\
-		+'   <data encoding="csv">\n'\
-		+ ', '.join(map_data) + '\n'\
-		+'   </data>\n'\
-		+' </layer>\n'\
-		+'</map>'
-
 	with open(dest_fname, 'w') as file:
-		file.write(xml)
+		file.write(""\
+			+  '<?xml version="1.0" encoding="UTF-8"?>\n'\
+			+  '<map version="1.8" tiledversion="1.8.4" orientation="orthogonal" renderorder="right-down" width="240" height="136" tilewidth="8" tileheight="8" infinite="0" nextlayerid="2" nextobjectid="1">\n'\
+			+ f' <tileset firstgid="1" source="{TILESET}"/>\n'\
+			+  ' <layer id="1" name="Tile Layer 1" width="240" height="136">\n'\
+			+  '   <data encoding="csv">\n'\
+			+ ", ".join(map_data) + '\n'\
+			+  '   </data>\n'\
+			+  ' </layer>\n'\
+			+  '</map>'
+		)
 
 
+USAGE = f"Usage:\n    tictiled [-ts:<tileset[{TSX}]>] <source_file[{MAP}|{TMX}]> <dest_file[{TMX}|{MAP}]>"
 def no_args():
-	print(f"\n\tTicTiled {VERSION}\n\nUsage:\n    tictiled <source_file[{MAP}|{TMX}]> <dest_file[{TMX}|{MAP}]>")
+	print(f"\n\tTicTiled {VERSION}\n\n{USAGE}")
 
+
+def handle_tileset(arg):
+	global TILESET
+	filename = arg[arg.find(':')+1:]
+	basename, ext = os.path.splitext(filename)
+
+	if not ext:
+		filename += TSX
+	elif ext != TSX:
+		__ERROR(f"invalid tileset extension '{ext}' \n")
+
+	# create tileset if it doesn't exist
+	if not file_exists(filename):
+		with open(filename, 'w') as file:
+			file.write(""\
+				+  '<?xml version="1.0" encoding="UTF-8"?>\n'\
+				+ f'<tileset version="1.8" tiledversion="1.8.4" name="{basename}" tilewidth="8" tileheight="8" tilecount="256" columns="16">\n'\
+				+ f' <image source="{basename}.png" width="128" height="128"/>\n'\
+				+  '</tileset>\n'
+			)
+		print(f"created tileset: '{filename}'")
+
+	TILESET = filename
+
+
+def convert(ext, src_fname, dest_fname):
+	print(f"converting from '{src_fname}' to '{dest_fname}'...")
+	if   ext == TMX: tmx_to_map(src_fname, dest_fname)
+	elif ext == MAP: map_to_tmx(src_fname, dest_fname)
+	print(f"\n'{dest_fname}' done.")
 
 
 def main(argc, argv):
 	if argc == 1:
-		no_args()
-		return
+		return no_args()
 
-	src_fname  = None # argv[1]
-	dest_fname = None # argv[2]
+	src_filename  = None # argv[1]
+	dest_filename = None # argv[2]
 
 	for i in range(1, argc):
-		a = argv[i]
-		if a.startswith('-'):
-			if a == "-v":
+		arg = argv[i]
+		if arg.startswith('-'):
+			if arg == "-v":
 				print(f"\n\tTicTiled {VERSION}\n")
 				return
+			elif arg.startswith("-ts"):
+				handle_tileset(arg)
 		else:
-			if   not src_fname: src_fname = a
-			elif not dest_fname: dest_fname = a
+			if   not src_filename:  src_filename  = arg
+			elif not dest_filename: dest_filename = arg
 
-	# print(src_fname, dest_fname)
+	src_basename, src_ext = os.path.splitext(src_filename)
+	if not dest_filename:
+		dest_filename = src_basename
 
-	(sname, sext) = os.path.splitext(src_fname)
-	if not dest_fname: dest_fname = sname
+	dest_ext = os.path.splitext(dest_filename)[1]
+	if not dest_ext:
+		if src_ext == TMX:
+			dest_filename += MAP
+			dest_ext = MAP
+		elif src_ext == MAP:
+			dest_filename += TMX
+			dest_ext = TMX
 
-	# print(sname, sext)
-	(dname, dext) = os.path.splitext(dest_fname)
-	if not dext:
-		if sext == TMX:
-			dest_fname += MAP
-			dext = MAP
-		elif sext == MAP:
-			dest_fname += TMX
-			dext = TMX
-
-	# print(src_fname, dest_fname)
-
-	if not ((sext == MAP and dext == TMX) or (sext == TMX and dext == MAP)):
+	if not ((src_ext == MAP and dest_ext == TMX) or (src_ext == TMX and dest_ext == MAP)):
 		__ERROR("invalid file extensions \n")
 
-	if not file_exists(src_fname):
-		__ERROR(f"couldn't load file '{src_fname}'. \n")
+	check_file(src_filename)
+	convert(src_ext, src_filename, dest_filename)
 
-	print(f"converting from '{src_fname}' to '{dest_fname}'...")
-
-	if   sext == TMX: tmx_to_map(src_fname, dest_fname)
-	elif sext == MAP: map_to_tmx(src_fname, dest_fname)
-
-	print(f"\n'{dest_fname}' done.")
 
 
 #=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=
