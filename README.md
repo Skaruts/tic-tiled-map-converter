@@ -2,7 +2,7 @@
 
 A simple python script for converting maps between Tiled and TIC-80. 
 
-Depends on [xmltodict](https://github.com/martinblech/xmltodict).
+Depends on [xmltodict](https://github.com/martinblech/xmltodict#ok-how-do-i-get-it).
 
 ### Usage
 
