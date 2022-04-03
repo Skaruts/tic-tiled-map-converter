@@ -39,7 +39,9 @@ Example:
 tictiled -ts:my_tileset.tsx foo.map derp.tmx
 ```
 
-The tileset file extension can be omitted. If the tileset doesn't exist, TicTiled will create a new one, and it will attach the tileset to a `.png` image with the same name (it won't check if the image exists). 
+The tileset file extension can be omitted. 
+
+If the tileset doesn't exist, TicTiled will create a new one, and it will attach the tileset to a `.png` image with the same name (it won't check if the image exists). 
 
 It doesn't matter if the `-ts` parameter comes before or after the filenames. This will work too:
 
