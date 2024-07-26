@@ -1,9 +1,11 @@
+#!/usr/bin/env python3
+
 import sys
 import os
 import xmltodict
 # import json  # for debugging
 
-VERSION = "0.02a"
+VERSION = "0.02b"
 
 # TODO:
 #   optionally care about layer visibility in order to ignore layers
