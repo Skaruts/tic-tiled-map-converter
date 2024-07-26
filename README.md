@@ -4,7 +4,7 @@ A simple python script for converting maps between Tiled and TIC-80.
 
 Depends on [xmltodict](https://github.com/martinblech/xmltodict#ok-how-do-i-get-it).
 
-Current version: `0.02a`
+Current version: `0.02b`
 
 
 
@@ -18,12 +18,10 @@ Current version: `0.02a`
 Call the script with the file names in the appropriate order, to convert from TIC-80 to Tiled or from Tiled to TIC-80. 
 
 ```
-python3 ttmc foo.map derp.tmx
+ttmc.py foo.map derp.tmx
 
-python3 ttmc derp.tmx foo.map
+ttmc.py derp.tmx foo.map
 ```
-(On some systems you may be able to omit `python3` and call scripts directly, as in `ttmc derp.tmx foo.map`.)
-
 The output file name and extension are optional. If a file name isn't provided, then it will be given the same name as the source file. 
 If the extension is omitted, it will be inferred. 
 
@@ -37,7 +35,7 @@ When converting to `.tmx`, a default tileset `tiles.tsx` will be attached to the
 Example:
 
 ```
-python3 ttmc -ts:my_tileset.tsx foo.map derp.tmx
+ttmc.py -ts:my_tileset.tsx foo.map derp.tmx
 ```
 
 The tileset file extension can be omitted. 
@@ -47,7 +45,7 @@ If the tileset doesn't exist, a new one will be created, and it will be given a 
 It doesn't matter if the `-ts` parameter comes before or after the filenames. This will work too:
 
 ```
-python3 ttmc foo.map derp.tmx -ts:my_tileset
+ttmc.py foo.map derp.tmx -ts:my_tileset
 ```
 
 
